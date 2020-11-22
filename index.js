@@ -31,7 +31,8 @@ async function run() {
                 dependencies.push(dependency);
         });
         core.info(dependencies);
-        
+
+        var dependencyPullRequests = [];
         for (var d of dependencies) {
             core.info(`Fetching '${github.context.repo.owner}/${github.context.repo.repo}/pulls/${d}'`)
             const { data: pr } = await octokit.pulls.get({

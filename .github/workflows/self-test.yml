@@ -5,5 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     name: self test
     steps:
+    - uses: actions/checkout@v2
     - name: check dependencies
       uses: ./
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

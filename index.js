@@ -28,11 +28,11 @@ async function run() {
         lines.forEach(l => {
             var dependency = getDependency(l);
             if (dependency !== null)
-                dependencies += dependency;
+                dependencies.push(dependency);
         });
         core.info(dependencies);
         
-        for (var d in dependencies) {
+        for (var d of dependencies) {
             core.info(`Fetching '${github.context.repo.owner}/${github.context.repo.repo}/pulls/${d}'`)
             const { data: pr } = await octokit.pulls.get({
                 owner: github.context.repo.owner,

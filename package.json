@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/github": "^4.0.0"
+  },
+  "name": "dependencies-action",
+  "description": "A GitHub Action that enforces PR dependencies",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gregsdennis/dependencies-action.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gregsdennis/dependencies-action/issues"
+  },
+  "homepage": "https://github.com/gregsdennis/dependencies-action#readme"
+}

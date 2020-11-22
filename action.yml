@@ -1,0 +1,5 @@
+name: 'PR Dependency Check'
+description: 'Verify PR dependencies are merged or closed'
+runs:
+  using: 'node12'
+  main: 'index.js'

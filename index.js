@@ -11,6 +11,7 @@ function getDependency(line) {
 
 async function run() {
     try {
+        // const myToken = core.getInput('GITHUB_TOKEN');
         const myToken = process.env.GITHUB_TOKEN;
         const octokit = github.getOctokit(myToken);
 

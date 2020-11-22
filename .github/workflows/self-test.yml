@@ -8,5 +8,5 @@ jobs:
     - uses: actions/checkout@v2
     - name: check dependencies
       uses: ./
-      with:
+      env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

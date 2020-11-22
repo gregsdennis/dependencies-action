@@ -37,7 +37,7 @@ async function run() {
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
                 pull_number: d,
-            });
+            }).catch(error => core.setFailed(error));
             if (!pr.merged && !pr.closed_at)
                 dependencyPullRequests += d
         }

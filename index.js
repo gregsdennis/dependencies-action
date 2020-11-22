@@ -40,13 +40,13 @@ async function run() {
                 pull_number: d,
             }).catch(error => core.error(error));
             if (!pr.merged && !pr.closed_at)
-                dependencyPullRequests += d
+                dependencyPullRequests.push(pr);
         }
 
         if (dependencyPullRequests.length !== 0) {
             var msg = 'The following issues need to be resolved before this PR can be closed:\n'
-            for (var d of dependencyPullRequests) {
-                msg += `\n#${d}`;
+            for (var pr of dependencyPullRequests) {
+                msg += `\n#${pr.number} - ${pr.title}`;
             }
             core.setFailed(msg);
         }

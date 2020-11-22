@@ -1,5 +1,9 @@
 name: 'PR Dependency Check'
 description: 'Verify PR dependencies are merged or closed'
+inputs:
+  GITHUB_TOKEN:
+    description: 'github access token'
+    required: true
 runs:
   using: 'node12'
   main: 'index.js'

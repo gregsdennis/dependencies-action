@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 getDependency = function(line) {
-    var rx = /^depends on #(\d*)$/gmi;
+    var rx = /^depends on #(\d+)\W*$/gmi;
     var match = rx.exec(line);
     if (match !== null)
         return parseInt(match[1], 10);

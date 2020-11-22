@@ -2,10 +2,10 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 function getDependency(line) {
-    var rx = /^depends on #(\d+)\W*$/gmi;
+    var rx = /(depends on|blocked by) #(\d+)/gmi;
     var match = rx.exec(line);
     if (match !== null)
-        return parseInt(match[1], 10);
+        return parseInt(match[2], 10);
     return null;
 };
 
@@ -20,7 +20,6 @@ async function run() {
             pull_number: github.context.issue.number,
         });
 
-        core.info(pullRequest.body);
         const lines = pullRequest.body.split(/\r\n|\r|\n/);
         
         var dependencies = [];
@@ -29,7 +28,6 @@ async function run() {
             if (dependency !== null)
                 dependencies.push(dependency);
         });
-        core.info(dependencies);
 
         var dependencyPullRequests = [];
         for (var d of dependencies) {

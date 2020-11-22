@@ -11,7 +11,6 @@ function getDependency(line) {
 
 async function run() {
     try {
-        // const myToken = core.getInput('GITHUB_TOKEN');
         const myToken = process.env.GITHUB_TOKEN;
         const octokit = github.getOctokit(myToken);
 
@@ -45,9 +44,11 @@ async function run() {
         }
 
         if (dependencyPullRequests.length !== 0) {
-            pullRequest.body.comments.create({
-                body: 'test'
-            });
+            var msg = 'The following issues need to be resolved before this PR can be closed:\n'
+            for (var d of dependencyPullRequests) {
+                msg += `\n#${d}`;
+            }
+            core.setFailed(msg);
         }
     } catch (error) {
         core.setFailed(error.message);

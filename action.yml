@@ -1,7 +1,8 @@
 name: 'PR Dependency Check'
 description: 'Verify PR dependencies are merged or closed'
-icon: alert-triangle
-color: orange
+branding:
+  icon: alert-triangle
+  color: orange
 runs:
   using: 'node12'
   main: 'index.js'

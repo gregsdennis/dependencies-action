@@ -21,7 +21,7 @@ async function run() {
             pull_number: github.context.issue.number,
         });
 
-        console.log(pullRequest.body);
+        core.info(pullRequest.body);
         const lines = pullRequest.body.split(/\r\n|\r|\n/);
         
         var dependencies = [];
@@ -30,14 +30,14 @@ async function run() {
             if (dependency !== null)
                 dependencies += dependency;
         });
-        console.log(dependencies);
+        core.info(dependencies);
         
         for (var d in dependencies) {
             const { data: pr } = await octokit.pulls.get({
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
                 pull_number: d,
-            }).catch(error => core.setFailed(error));
+            }).catch(error => core.error(error));
             if (!pr.merged && !pr.closed_at)
                 dependencyPullRequests += d
         }

@@ -62,8 +62,12 @@ async function run() {
             } else {
                 const { data: pr } = response;
                 if (!pr) continue;
-                if (!pr.merged && !pr.closed_at)
+                if (!pr.merged && !pr.closed_at) {
+                    core.info('PR is still open.');
                     dependencyPullRequests.push(pr);
+                } else {
+                    core.info('PR closed.');
+                }
             }
         }
 

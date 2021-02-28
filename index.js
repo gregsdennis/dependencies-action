@@ -20,9 +20,9 @@ function getDependency(line) {
     if (match !== null) {
         core.info(`Found markdown dependency in '${line}'`);
         return {
-            owner: match[1],
-            repo: match[2],
-            pull_number: parseInt(match[3], 10)
+            owner: match[2],
+            repo: match[3],
+            pull_number: parseInt(match[4], 10)
         };
     }
 

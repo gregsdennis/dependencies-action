@@ -55,7 +55,7 @@ async function run() {
         core.info('Analyzing lines...');
         var dependencyPullRequests = [];
         for (var d of dependencies) {
-            core.info(`Fetching '${d}'`);
+            core.info(`Fetching '${JSON.stringify(d)}'`);
             const response = await octokit.pulls.get(d).catch(error => core.error(error));
             if (response === undefined || response === undefined) {
                 core.info('Could not locate this dependency.  Will need to verify manually.');

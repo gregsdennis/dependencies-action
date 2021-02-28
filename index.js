@@ -1,11 +1,32 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
+const keyPhrases = 'depends on|blocked by';
+const plainTextRegex = new RegExp(`(${keyPhrases}) #(\d+)`, 'gmi');
+const markdownRegex = new RegExp(`(${keyPhrases}) \[.*\]\((.*\/\d+)\)`, 'gmi');
+const prRegex = /https:\/\/github\.com\/(\w+)\/([-._a-z0-9]+)\/pull\/(\d+)/gmi
+
 function getDependency(line) {
-    var rx = /(depends on|blocked by) #(\d+)/gmi;
-    var match = rx.exec(line);
-    if (match !== null)
-        return parseInt(match[2], 10);
+    var match = plainTextRegex.exec(line);
+    if (match !== null) {
+        return {
+            owner: github.context.repo.owner,
+            repo: github.context.repo.repo,
+            pull_number: parseInt(match[2], 10)
+        };
+    }
+
+    match = plainTextRegex.exec(line);
+    if (match !== null) {
+        var url = match[3];
+        match = prRegex.exec(url);
+        return {
+            owner: match[1],
+            repo: match[2],
+            pull_number: parseInt(match[3], 10)
+        };
+    }
+
     return null;
 };
 
@@ -31,12 +52,9 @@ async function run() {
 
         var dependencyPullRequests = [];
         for (var d of dependencies) {
-            core.info(`Fetching '${github.context.repo.owner}/${github.context.repo.repo}/pulls/${d}'`)
-            const { data: pr } = await octokit.pulls.get({
-                owner: github.context.repo.owner,
-                repo: github.context.repo.repo,
-                pull_number: d,
-            }).catch(error => core.error(error));
+            core.info(`Fetching '${d}'`)
+            const { data: pr } = await octokit.pulls.get(d).catch(error => core.error(error));
+            if (!pr) continue;
             if (!pr.merged && !pr.closed_at)
                 dependencyPullRequests.push(pr);
         }

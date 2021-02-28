@@ -19,6 +19,7 @@ function getDependency(line) {
 
     match = markdownRegex.exec(line);
     if (match !== null) {
+        core.info(`Found markdown link in '${line}'`);
         var url = match[3];
         match = prRegex.exec(url);
         if (match !== null) {

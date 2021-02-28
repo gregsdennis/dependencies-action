@@ -2,9 +2,8 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 const keyPhrases = 'depends on|blocked by';
-const plainTextRegex = new RegExp(`(${keyPhrases}) #(\d+)`, 'gmi');
-const markdownRegex = new RegExp(`(${keyPhrases}) \[.*\]\((.*\/\d+)\)`, 'gmi');
-const prRegex = /https:\/\/github\.com\/(\w+)\/([-._a-z0-9]+)\/pull\/(\d+)/gmi
+const plainTextRegex = new RegExp(`(${keyPhrases}) #(\\d+)`, 'gmi');
+const markdownRegex = new RegExp(`(${keyPhrases}) \\[.*\\]\\(https:\\/\\/github\\.com\\/(\\w+)\\/([-._a-z0-9]+)\\/pull\\/(\\d+)\\)`, 'gmi');
 
 function getDependency(line) {
     var match = plainTextRegex.exec(line);
@@ -19,17 +18,12 @@ function getDependency(line) {
 
     match = markdownRegex.exec(line);
     if (match !== null) {
-        core.info(`Found markdown link in '${line}'`);
-        var url = match[3];
-        match = prRegex.exec(url);
-        if (match !== null) {
-            core.info(`Found number-referenced dependency in '${line}'`);
-            return {
-                owner: match[1],
-                repo: match[2],
-                pull_number: parseInt(match[3], 10)
-            };
-        }
+        core.info(`Found number-referenced dependency in '${line}'`);
+        return {
+            owner: match[1],
+            repo: match[2],
+            pull_number: parseInt(match[3], 10)
+        };
     }
 
     core.info(`Found no dependency in '${line}'`);

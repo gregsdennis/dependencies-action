@@ -77,6 +77,8 @@ async function run() {
                 msg += `\n#${pr.number} - ${pr.title}`;
             }
             core.setFailed(msg);
+        } else {
+            core.info("\nAll dependencies have been resolved!")
         }
     } catch (error) {
         core.setFailed(error.message);

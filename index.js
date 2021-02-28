@@ -52,18 +52,19 @@ async function run() {
                 dependencies.push(dependency);
         });
 
-        core.info('Analyzing lines...')
+        core.info('Analyzing lines...');
         var dependencyPullRequests = [];
         for (var d of dependencies) {
-            core.info(`Fetching '${d}'`)
+            core.info(`Fetching '${d}'`);
             const response = await octokit.pulls.get(d).catch(error => core.error(error));
             if (response === undefined || response === undefined) {
-                core.info('Could not locate this dependency.  Will need to verify manually.')
+                core.info('Could not locate this dependency.  Will need to verify manually.');
+            } else {
+                const { data: pr } = response;
+                if (!pr) continue;
+                if (!pr.merged && !pr.closed_at)
+                    dependencyPullRequests.push(pr);
             }
-            const { data: pr } = response;
-            if (!pr) continue;
-            if (!pr.merged && !pr.closed_at)
-                dependencyPullRequests.push(pr);
         }
 
         if (dependencyPullRequests.length !== 0) {

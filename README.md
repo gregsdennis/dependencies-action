@@ -6,6 +6,16 @@ The bot parses the first comment of a PR looking for the key phrases "depends on
 
 ***NOTE** The parsing logic currently only looks for these formats, which means that it only support linking PRs from the same repository.  Please see the issues list for planned enhancements.*
 
+## Supported link styles
+
+The action can detect links in the following styles:
+
+- Quick Link: `#5`
+- Partial Link: `gregsdennis/dependencies-action#5`
+- Partial URL: `gregsdennis/dependencies-action/pulls/5`
+- Full URL: `http://github.com/gregsdennis/dependencies-action/pulls/5`
+- Markdown: `[markdown link](http://github.com/gregsdennis/dependencies-action/pulls/5)`
+
 ## See it in action:
 
 - [PR to be landed first](http://github.com/gregsdennis/dependencies-action/pulls/4)

@@ -9,6 +9,7 @@ const prRegex = /https:\/\/github\.com\/(\w+)\/([-._a-z0-9]+)\/pull\/(\d+)/gmi
 function getDependency(line) {
     var match = plainTextRegex.exec(line);
     if (match !== null) {
+        core.info(`Found number-referenced dependency in '${line}'`);
         return {
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -16,22 +17,27 @@ function getDependency(line) {
         };
     }
 
-    match = plainTextRegex.exec(line);
+    match = markdownRegex.exec(line);
     if (match !== null) {
         var url = match[3];
         match = prRegex.exec(url);
-        return {
-            owner: match[1],
-            repo: match[2],
-            pull_number: parseInt(match[3], 10)
-        };
+        if (match !== null) {
+            core.info(`Found number-referenced dependency in '${line}'`);
+            return {
+                owner: match[1],
+                repo: match[2],
+                pull_number: parseInt(match[3], 10)
+            };
+        }
     }
 
+    core.info(`Found no dependency in '${line}'`);
     return null;
 };
 
 async function run() {
     try {
+        core.info('Initializing...');
         const myToken = process.env.GITHUB_TOKEN;
         const octokit = github.getOctokit(myToken);
 
@@ -41,6 +47,7 @@ async function run() {
             pull_number: github.context.issue.number,
         });
 
+        core.info('Reading PR body...');
         const lines = pullRequest.body.split(/\r\n|\r|\n/);
         
         var dependencies = [];
@@ -50,6 +57,7 @@ async function run() {
                 dependencies.push(dependency);
         });
 
+        core.info('Analyzing lines...')
         var dependencyPullRequests = [];
         for (var d of dependencies) {
             core.info(`Fetching '${d}'`)
@@ -60,7 +68,7 @@ async function run() {
         }
 
         if (dependencyPullRequests.length !== 0) {
-            var msg = 'The following issues need to be resolved before this PR can be closed:\n'
+            var msg = 'The following issues need to be resolved before this PR can be closed:\n';
             for (var pr of dependencyPullRequests) {
                 msg += `\n#${pr.number} - ${pr.title}`;
             }

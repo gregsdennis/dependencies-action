@@ -2,11 +2,22 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 const keyPhrases = 'depends on|blocked by';
-const plainTextRegex = new RegExp(`(${keyPhrases}) #(\\d+)`, 'gmi');
+const quickLinkRegex = new RegExp(`(${keyPhrases}) #(\\d+)`, 'gmi');
+const partialLinkRegex = new RegExp(`(${keyPhrases}) (\\w+)\\/([-._a-z0-9]+)\\/pull\\/(\\d+)`, 'gmi');
+const partialUrlRegex = new RegExp(`(${keyPhrases}) (\\w+)\\/([-._a-z0-9]+)#(\\d+)`, 'gmi');
+const fullUrlRegex = new RegExp(`(${keyPhrases}) https:\\/\\/github\\.com\\/(\\w+)\\/([-._a-z0-9]+)\\/pull\\/(\\d+)`, 'gmi');
 const markdownRegex = new RegExp(`(${keyPhrases}) \\[.*\\]\\(https:\\/\\/github\\.com\\/(\\w+)\\/([-._a-z0-9]+)\\/pull\\/(\\d+)\\)`, 'gmi');
 
+function extractFromMatch(match) {
+    return {
+        owner: match[2],
+        repo: match[3],
+        pull_number: parseInt(match[4], 10)
+    };
+}
+
 function getDependency(line) {
-    var match = plainTextRegex.exec(line);
+    var match = quickLinkRegex.exec(line);
     if (match !== null) {
         core.info(`  Found number-referenced dependency in '${line}'`);
         return {
@@ -16,14 +27,28 @@ function getDependency(line) {
         };
     }
 
+    match = partialLinkRegex.exec(line);
+    if (match !== null) {
+        core.info(`  Found partial-link dependency in '${line}'`);
+        return extractFromMatch(match);
+    }
+
+    match = partialUrlRegex.exec(line);
+    if (match !== null) {
+        core.info(`  Found partial-url dependency in '${line}'`);
+        return extractFromMatch(match);
+    }
+
+    match = fullUrlRegex.exec(line);
+    if (match !== null) {
+        core.info(`  Found full-url dependency in '${line}'`);
+        return extractFromMatch(match);
+    }
+
     match = markdownRegex.exec(line);
     if (match !== null) {
         core.info(`  Found markdown dependency in '${line}'`);
-        return {
-            owner: match[2],
-            repo: match[3],
-            pull_number: parseInt(match[4], 10)
-        };
+        return extractFromMatch(match);
     }
 
     core.info(`  Found no dependency in '${line}'`);

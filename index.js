@@ -18,7 +18,7 @@ function getDependency(line) {
 
     match = markdownRegex.exec(line);
     if (match !== null) {
-        core.info(`Found number-referenced dependency in '${line}'`);
+        core.info(`Found markdown dependency in '${line}'`);
         return {
             owner: match[1],
             repo: match[2],
@@ -56,7 +56,11 @@ async function run() {
         var dependencyPullRequests = [];
         for (var d of dependencies) {
             core.info(`Fetching '${d}'`)
-            const { data: pr } = await octokit.pulls.get(d).catch(error => core.error(error));
+            const response = await octokit.pulls.get(d).catch(error => core.error(error));
+            if (response === undefined || response === undefined) {
+                core.info('Could not locate this dependency.  Will need to verify manually.')
+            }
+            const { data: pr } = response;
             if (!pr) continue;
             if (!pr.merged && !pr.closed_at)
                 dependencyPullRequests.push(pr);

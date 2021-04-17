@@ -3,10 +3,10 @@ const github = require('@actions/github');
 
 const keyPhrases = 'depends on|blocked by';
 const quickLinkRegex = new RegExp(`(${keyPhrases}) #(\\d+)`, 'gmi');
-const partialLinkRegex = new RegExp(`(${keyPhrases}) (\\w+)\\/([-._a-z0-9]+)#(\\d+)`, 'gmi');
-const partialUrlRegex = new RegExp(`(${keyPhrases}) (\\w+)\\/([-._a-z0-9]+)\\/pull\\/(\\d+)`, 'gmi');
-const fullUrlRegex = new RegExp(`(${keyPhrases}) https:\\/\\/github\\.com\\/(\\w+)\\/([-._a-z0-9]+)\\/pull\\/(\\d+)`, 'gmi');
-const markdownRegex = new RegExp(`(${keyPhrases}) \\[.*\\]\\(https:\\/\\/github\\.com\\/(\\w+)\\/([-._a-z0-9]+)\\/pull\\/(\\d+)\\)`, 'gmi');
+const partialLinkRegex = new RegExp(`(${keyPhrases}) ([-_\\w]+)\\/([-._a-z0-9]+)#(\\d+)`, 'gmi');
+const partialUrlRegex = new RegExp(`(${keyPhrases}) ([-_\\w]+)\\/([-._a-z0-9]+)\\/pull\\/(\\d+)`, 'gmi');
+const fullUrlRegex = new RegExp(`(${keyPhrases}) https:\\/\\/github\\.com\\/([-_\\w]+)\\/([-._a-z0-9]+)\\/pull\\/(\\d+)`, 'gmi');
+const markdownRegex = new RegExp(`(${keyPhrases}) \\[.*\\]\\(https:\\/\\/github\\.com\\/([-_\\w]+)\\/([-._a-z0-9]+)\\/pull\\/(\\d+)\\)`, 'gmi');
 
 function extractFromMatch(match) {
     return {

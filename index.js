@@ -2,11 +2,12 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 const keyPhrases = 'depends on|blocked by';
+const issueTypes = 'issues|pull'
 const quickLinkRegex = new RegExp(`(${keyPhrases}) #(\\d+)`, 'gmi');
 const partialLinkRegex = new RegExp(`(${keyPhrases}) ([-_\\w]+)\\/([-._a-z0-9]+)#(\\d+)`, 'gmi');
-const partialUrlRegex = new RegExp(`(${keyPhrases}) ([-_\\w]+)\\/([-._a-z0-9]+)\\/pull\\/(\\d+)`, 'gmi');
-const fullUrlRegex = new RegExp(`(${keyPhrases}) https:\\/\\/github\\.com\\/([-_\\w]+)\\/([-._a-z0-9]+)\\/pull\\/(\\d+)`, 'gmi');
-const markdownRegex = new RegExp(`(${keyPhrases}) \\[.*\\]\\(https:\\/\\/github\\.com\\/([-_\\w]+)\\/([-._a-z0-9]+)\\/pull\\/(\\d+)\\)`, 'gmi');
+const partialUrlRegex = new RegExp(`(${keyPhrases}) ([-_\\w]+)\\/([-._a-z0-9]+)\\/${issueTypes}\\/(\\d+)`, 'gmi');
+const fullUrlRegex = new RegExp(`(${keyPhrases}) https:\\/\\/github\\.com\\/([-_\\w]+)\\/([-._a-z0-9]+)\\/${issueTypes}\\/(\\d+)`, 'gmi');
+const markdownRegex = new RegExp(`(${keyPhrases}) \\[.*\\]\\(https:\\/\\/github\\.com\\/([-_\\w]+)\\/([-._a-z0-9]+)\\/${issueTypes}\\/(\\d+)\\)`, 'gmi');
 
 function extractFromMatch(match) {
     return {
@@ -78,27 +79,43 @@ async function run() {
         });
 
         core.info('\nAnalyzing lines...');
-        var dependencyPullRequests = [];
+        var dependencyIssues = [];
         for (var d of dependencies) {
             core.info(`  Fetching '${JSON.stringify(d)}'`);
-            const response = await octokit.pulls.get(d).catch(error => core.error(error));
-            if (response === undefined || response === undefined) {
-                core.info('    Could not locate this dependency.  Will need to verify manually.');
-            } else {
+            var isPr = true;
+            var response = await octokit.pulls.get(d).catch(error => core.error(error));
+            if (response === undefined) {
+                isPr = false;
+                response = await octokit.issues.get(d).catch(error => core.error(error));
+                if (response === undefined) {
+                    core.info('    Could not locate this dependency.  Will need to verify manually.');
+                    continue;
+                }
+            }
+            if (isPr) {
                 const { data: pr } = response;
                 if (!pr) continue;
                 if (!pr.merged && !pr.closed_at) {
                     core.info('    PR is still open.');
-                    dependencyPullRequests.push(pr);
+                    dependencyIssues.push(pr);
                 } else {
                     core.info('    PR has been closed.');
+                }
+            } else {
+                const { data: issue } = response;
+                if (!issue) continue;
+                if (!pr.closed_at) {
+                    core.info('    Issue is still open.');
+                    dependencyIssues.push(issue);
+                } else {
+                    core.info('    Issue has been closed.');
                 }
             }
         }
 
-        if (dependencyPullRequests.length !== 0) {
-            var msg = '\nThe following issues need to be resolved before this PR can be closed:\n';
-            for (var pr of dependencyPullRequests) {
+        if (dependencyIssues.length !== 0) {
+            var msg = '\nThe following issues need to be resolved before this PR can be merged:\n';
+            for (var pr of dependencyIssues) {
                 msg += `\n#${pr.number} - ${pr.title}`;
             }
             core.setFailed(msg);

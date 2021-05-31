@@ -87,9 +87,9 @@ async function run() {
             if (response === undefined) {
                 isPr = false;
                 d = {
-                    owner: github.context.repo.owner,
-                    repo: github.context.repo.repo,
-                    issue_number: github.context.issue.number,
+                    owner: d.owner,
+                    repo: d.repo,
+                    issue_number: d.number,
                 };
                 core.info(`  Fetching '${JSON.stringify(d)}'`);
                 response = await octokit.issues.get(d).catch(error => core.error(error));

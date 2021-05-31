@@ -108,7 +108,7 @@ async function run() {
             } else {
                 const { data: issue } = response;
                 if (!issue) continue;
-                if (!pr.closed_at) {
+                if (!issue.closed_at) {
                     core.info('    Issue is still open.');
                     dependencyIssues.push(issue);
                 } else {

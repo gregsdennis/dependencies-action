@@ -13,7 +13,7 @@ function extractFromMatch(match) {
     return {
         owner: match[2],
         repo: match[3],
-        issue_number: parseInt(match[5], 10)
+        pull_number: parseInt(match[5], 10)
     };
 }
 
@@ -24,7 +24,7 @@ function getDependency(line) {
         return {
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
-            issue_number: parseInt(match[2], 10)
+            pull_number: parseInt(match[2], 10)
         };
     }
 
@@ -82,19 +82,40 @@ async function run() {
         var dependencyIssues = [];
         for (var d of dependencies) {
             core.info(`  Fetching '${JSON.stringify(d)}'`);
+            var isPr = true;
             var response = await octokit.pulls.get(d).catch(error => core.error(error));
             if (response === undefined) {
-                core.info('    Could not locate this dependency.  Will need to verify manually.');
-                continue;
+                isPr = false;
+                d = {
+                    owner: d.owner,
+                    repo: d.repo,
+                    issue_number: d.pull_number,
+                };
+                core.info(`  Fetching '${JSON.stringify(d)}'`);
+                response = await octokit.issues.get(d).catch(error => core.error(error));
+                if (response === undefined) {
+                    core.info('    Could not locate this dependency.  Will need to verify manually.');
+                    continue;
+                }
             }
-
-            const { data: issue } = response;
-            if (!issue) continue;
-            if (!issue.closed_at) {
-                core.info('    Issue is still open.');
-                dependencyIssues.push(issue);
+            if (isPr) {
+                const { data: pr } = response;
+                if (!pr) continue;
+                if (!pr.merged && !pr.closed_at) {
+                    core.info('    PR is still open.');
+                    dependencyIssues.push(pr);
+                } else {
+                    core.info('    PR has been closed.');
+                }
             } else {
-                core.info('    Issue has been closed.');
+                const { data: issue } = response;
+                if (!issue) continue;
+                if (!issue.closed_at) {
+                    core.info('    Issue is still open.');
+                    dependencyIssues.push(issue);
+                } else {
+                    core.info('    Issue has been closed.');
+                }
             }
         }
 

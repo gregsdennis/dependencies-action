@@ -5,9 +5,9 @@ const keyPhrases = 'depends on|blocked by';
 const issueTypes = 'issues|pull'
 const quickLinkRegex = new RegExp(`(${keyPhrases}) #(\\d+)`, 'gmi');
 const partialLinkRegex = new RegExp(`(${keyPhrases}) ([-_\\w]+)\\/([-._a-z0-9]+)(#)(\\d+)`, 'gmi');
-const partialUrlRegex = new RegExp(`(${keyPhrases}) ([-_\\w]+)\\/([-._a-z0-9]+)\\/${issueTypes}\\/(\\d+)`, 'gmi');
-const fullUrlRegex = new RegExp(`(${keyPhrases}) https:\\/\\/github\\.com\\/([-_\\w]+)\\/([-._a-z0-9]+)\\/${issueTypes}\\/(\\d+)`, 'gmi');
-const markdownRegex = new RegExp(`(${keyPhrases}) \\[.*\\]\\(https:\\/\\/github\\.com\\/([-_\\w]+)\\/([-._a-z0-9]+)\\/${issueTypes}\\/(\\d+)\\)`, 'gmi');
+const partialUrlRegex = new RegExp(`(${keyPhrases}) ([-_\\w]+)\\/([-._a-z0-9]+)\\/(${issueTypes})\\/(\\d+)`, 'gmi');
+const fullUrlRegex = new RegExp(`(${keyPhrases}) https:\\/\\/github\\.com\\/([-_\\w]+)\\/([-._a-z0-9]+)\\/(${issueTypes})\\/(\\d+)`, 'gmi');
+const markdownRegex = new RegExp(`(${keyPhrases}) \\[.*\\]\\(https:\\/\\/github\\.com\\/([-_\\w]+)\\/([-._a-z0-9]+)\\/(${issueTypes})\\/(\\d+)\\)`, 'gmi');
 
 function extractFromMatch(match) {
     return {

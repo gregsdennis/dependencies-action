@@ -4,8 +4,6 @@ This GitHub Action enforces PR dependencies as stated in a PR's opening comment.
 
 The bot parses the first comment of a PR looking for the key phrases "depends on" or "blocked by" followed by an issue number specified by `#` and the issue or PR number (e.g. `#5`).
 
-***NOTE** The parsing logic currently only looks for these formats, which means that it only support linking PRs from the same repository.  Please see the issues list for planned enhancements.*
-
 ## Supported link styles
 
 The action can detect links in the following styles:

@@ -86,11 +86,13 @@ async function run() {
             var response = await octokit.pulls.get(d).catch(error => core.error(error));
             if (response === undefined) {
                 isPr = false;
-                response = await octokit.issues.get({
+                d = {
                     owner: github.context.repo.owner,
                     repo: github.context.repo.repo,
                     issue_number: github.context.issue.number,
-                }).catch(error => core.error(error));
+                };
+                core.info(`  Fetching '${JSON.stringify(d)}'`);
+                response = await octokit.issues.get(d).catch(error => core.error(error));
                 if (response === undefined) {
                     core.info('    Could not locate this dependency.  Will need to verify manually.');
                     continue;

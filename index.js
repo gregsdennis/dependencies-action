@@ -68,6 +68,11 @@ async function run() {
             pull_number: github.context.issue.number,
         });
 
+        if (!pullRequest.body){
+            core.info('body empty')
+            return;
+        }
+
         core.info('\nReading PR body...');
         const lines = pullRequest.body.split(/\r\n|\r|\n/);
         

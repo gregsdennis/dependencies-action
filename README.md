@@ -10,16 +10,16 @@ The action can detect links in the following styles:
 
 - Quick Link: `#5`
 - Partial Link: `gregsdennis/dependencies-action#5`
-- Partial URL: `gregsdennis/dependencies-action/pulls/5`
-- Full URL: `http://github.com/gregsdennis/dependencies-action/pulls/5`
-- Markdown: `[markdown link](http://github.com/gregsdennis/dependencies-action/pulls/5)`
+- Partial URL: `gregsdennis/dependencies-action/pull/5`
+- Full URL: `http://github.com/gregsdennis/dependencies-action/pull/5`
+- Markdown: `[markdown link](http://github.com/gregsdennis/dependencies-action/pull/5)`
 
 Works for both issues and PRs!
 
 ## See it in action:
 
-- [PR to be landed first](http://github.com/gregsdennis/dependencies-action/pulls/4)
-- [PR to be landed second](http://github.com/gregsdennis/dependencies-action/pulls/5)
+- [PR to be landed first](http://github.com/gregsdennis/dependencies-action/pull/4)
+- [PR to be landed second](http://github.com/gregsdennis/dependencies-action/pull/5)
 
 ## Example usage
 

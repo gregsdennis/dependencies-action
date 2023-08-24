@@ -1,9 +1,11 @@
-// const core = require('@actions/core');
-// const github = require('@actions/github');
+const core = require('@actions/core');
+const github = require('@actions/github');
+
+var customDomains = core.getInput('custom-domains') ?? [];
 
 const keyPhrases = 'depends on|blocked by';
 const issueTypes = 'issues|pull';
-const domainsList = ['github.com', 'custom-domain.edu']; // add others from parameter
+const domainsList = ['github.com'].concat(customDomains); // add others from parameter
 const domainsString = combineDomains(domainsList);
 
 const quickLinkRegex = new RegExp(`(${keyPhrases}) #(\\d+)`, 'gmi');

@@ -1,7 +1,7 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 
-var customDomains = core.getInput('custom-domains') ?? [];
+var customDomains = core.getInput('custom-domains')?.split(/(\s+)/) ?? [];
 
 const keyPhrases = 'depends on|blocked by';
 const issueTypes = 'issues|pull';
@@ -21,10 +21,6 @@ function escapeDomainForRegex(domain) {
 function combineDomains(domains) {
     return domains.map(x => escapeDomainForRegex(x)).join("|");
 }
-
-console.log(fullUrlRegex);
-
-return;
 
 function extractFromMatch(match) {
     return {

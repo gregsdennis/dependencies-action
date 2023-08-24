@@ -37,8 +37,7 @@ jobs:
     steps:
     - uses: gregsdennis/dependencies-action@main
       with:
-        custom-domains:
-          - my-custom-domain.io
+        custom-domains: my-custom-domain.io another.domain.com
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```

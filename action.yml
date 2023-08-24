@@ -6,3 +6,8 @@ branding:
 runs:
   using: 'node16'
   main: 'index.js'
+inputs:
+  custom-domains:
+    description: 'Define custom domains other than "github.com"'
+    required: false
+    default: []

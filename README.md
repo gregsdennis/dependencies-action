@@ -11,10 +11,12 @@ The action can detect links in the following styles:
 - Quick Link: `#5`
 - Partial Link: `gregsdennis/dependencies-action#5`
 - Partial URL: `gregsdennis/dependencies-action/pull/5`
-- Full URL: `http://github.com/gregsdennis/dependencies-action/pull/5`
-- Markdown: `[markdown link](http://github.com/gregsdennis/dependencies-action/pull/5)`
+- Full URL: `https://github.com/gregsdennis/dependencies-action/pull/5`
+- Markdown: `[markdown link](https://github.com/gregsdennis/dependencies-action/pull/5)`
 
 Works for both issues and PRs!
+
+Also supports custom domains for use with GitHub Enterprise!
 
 ## See it in action:
 
@@ -34,6 +36,8 @@ jobs:
     name: Check Dependencies
     steps:
     - uses: gregsdennis/dependencies-action@main
+      with:
+        custom-domains: my-custom-domain.io another.domain.com
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```

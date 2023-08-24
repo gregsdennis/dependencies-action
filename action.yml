@@ -6,3 +6,8 @@ branding:
 runs:
   using: 'node16'
   main: 'index.js'
+inputs:
+  custom-domains:
+    description: 'Space-delimited list of custom domains where issues may be found'
+    required: false
+    default: null

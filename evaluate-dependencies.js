@@ -30,44 +30,34 @@ function extractFromMatch(match) {
     };
 }
 
-function getDependency(line) {
-    var match = quickLinkRegex.exec(line);
-    if (match !== null) {
-        core.info(`  Found number-referenced dependency in '${line}'`);
-        return {
-            owner: github.context.repo.owner,
-            repo: github.context.repo.repo,
-            pull_number: parseInt(match[2], 10)
-        };
+function getAllDependencies(body) {
+    var allMatches = [];
+
+    var quickLinkMatches = [...body.matchAll(quickLinkRegex)];
+    if (quickLinkMatches.length !== 0) {
+        quickLinkMatches.forEach(match => {
+            core.info(`  Found number-referenced dependency in '${match}'`);
+            allMatches.push({
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                pull_number: parseInt(match[2], 10)
+            });
+        });
+    }
+    
+    var extractableMatches = [...body.matchAll(partialLinkRegex)]
+        .concat([...body.matchAll(partialUrlRegex)])
+        .concat([...body.matchAll(fullUrlRegex)])
+        .concat([...body.matchAll(markdownRegex)]);
+    if (extractableMatches.length !== 0) {
+        extractableMatches.forEach(match => {
+            core.info(`  Found number-referenced dependency in '${match}'`);
+            allMatches.push(extractFromMatch(match));
+        });
     }
 
-    match = partialLinkRegex.exec(line);
-    if (match !== null) {
-        core.info(`  Found partial-link dependency in '${line}'`);
-        return extractFromMatch(match);
-    }
-
-    match = partialUrlRegex.exec(line);
-    if (match !== null) {
-        core.info(`  Found partial-url dependency in '${line}'`);
-        return extractFromMatch(match);
-    }
-
-    match = fullUrlRegex.exec(line);
-    if (match !== null) {
-        core.info(`  Found full-url dependency in '${line}'`);
-        return extractFromMatch(match);
-    }
-
-    match = markdownRegex.exec(line);
-    if (match !== null) {
-        core.info(`  Found markdown dependency in '${line}'`);
-        return extractFromMatch(match);
-    }
-
-    core.info(`  Found no dependency in '${line}'`);
-    return null;
-};
+    return allMatches;
+}
 
 async function evaluate() {
     try {
@@ -87,14 +77,7 @@ async function evaluate() {
         }
 
         core.info('\nReading PR body...');
-        const lines = pullRequest.body.split(/\r\n|\r|\n/);
-        
-        var dependencies = [];
-        lines.forEach(l => {
-            var dependency = getDependency(l);
-            if (dependency !== null)
-                dependencies.push(dependency);
-        });
+        var dependencies = getAllDependencies(pullRequest.body);
 
         core.info('\nAnalyzing lines...');
         var dependencyIssues = [];
@@ -152,11 +135,7 @@ async function evaluate() {
     }
 }
 
-function getPullRequestBody(){
-
-}
-
 module.exports = {
     evaluate: evaluate,
-    getDependency: getDependency
+    getAllDependencies: getAllDependencies
 }

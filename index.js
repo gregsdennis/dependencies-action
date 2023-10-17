@@ -1,7 +1,7 @@
 const evaluate = require('./evaluate-dependencies');
 
 async function run() {
-    await evaluate();
+    await evaluate.evaluate();
 }
 
 run();

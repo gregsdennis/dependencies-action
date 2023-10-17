@@ -28,7 +28,9 @@ Also supports custom domains for use with GitHub Enterprise!
 Just add the following to a `.yml` file in your `.github/workflows/` folder.
 
 ```yaml
-on: [pull_request]
+on:
+  pull_request_target: 
+    types: [opened, edited, closed, reopened]
 
 jobs:
   check_dependencies:

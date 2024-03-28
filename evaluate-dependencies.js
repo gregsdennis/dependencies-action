@@ -68,7 +68,7 @@ async function evaluate() {
             log:'debug'
         });
 
-        const { data: pullRequest } = await octokit.pulls.get({
+        const { data: pullRequest } = await octokit.rest.pulls.get({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
             pull_number: github.context.issue.number,

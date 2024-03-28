@@ -96,7 +96,7 @@ async function evaluate() {
                 pull_number: d.pull_number,
             });
 
-            info(`RESPONSE2: ${JSON.stringify(data)}`);
+            info(`RESPONSE2: ${JSON.stringify(pullRequest)}`);
             info('-------------------');
             // if (response === undefined) {
             //     isPr = false;

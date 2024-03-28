@@ -63,7 +63,10 @@ async function evaluate() {
     try {
         core.info('Initializing...');
         const myToken = process.env.GITHUB_TOKEN;
-        const octokit = github.getOctokit(myToken);
+        core.info('Token acquired', myToken);
+        const octokit = github.getOctokit(myToken, {
+            log:'debug'
+        });
 
         const { data: pullRequest } = await octokit.pulls.get({
             owner: github.context.repo.owner,

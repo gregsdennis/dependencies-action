@@ -82,7 +82,7 @@ async function evaluate() {
         core.info('\nReading PR body...');
         core.debug(toJson(pullRequest.body));
         var dependencies = getAllDependencies(pullRequest.body);
-        core.debug(toJson(dependencies));
+        core.debug(JSON.stringify(dependencies));
         core.info('\nAnalyzing lines...');
         var dependencyIssues = [];
         for (var d of dependencies) {

@@ -81,6 +81,10 @@ async function evaluate() {
             return;
         }
 
+        const { data } = await octokit.request('GET /user/repos', { type: 'private' })
+
+        ore.info(`  REPOS! '${JSON.stringify(data)}'`);
+
         core.info('\nReading PR body...');
         core.debug(JSON.stringify(pullRequest.body));
         var dependencies = getAllDependencies(pullRequest.body);

@@ -68,8 +68,6 @@ async function evaluate() {
             log:'debug'
         });
 
-
-
         const { data: pullRequest } = await octokit.rest.pulls.get({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -80,10 +78,6 @@ async function evaluate() {
             core.info('body empty')
             return;
         }
-
-        const { data } = await octokit.request('GET /user/repos', { type: 'private' })
-
-        core.info(`  REPOS! '${JSON.stringify(data)}'`);
 
         core.info('\nReading PR body...');
         core.debug(JSON.stringify(pullRequest.body));

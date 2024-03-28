@@ -1,5 +1,6 @@
-import { Octokit, getInput } from "@octokit/core";
+import {Octokit} from "@octokit/core";
 import github from '@actions/github';
+import {getInput} from "@actions/core";
 
 var customDomains = getInput('custom-domains')?.split(/(\s+)/) ?? [];
 
@@ -44,7 +45,7 @@ function getAllDependencies(body) {
             });
         });
     }
-    
+
     var extractableMatches = [...body.matchAll(partialLinkRegex)]
         .concat([...body.matchAll(partialUrlRegex)])
         .concat([...body.matchAll(fullUrlRegex)])
@@ -62,19 +63,19 @@ function getAllDependencies(body) {
 async function evaluate() {
     try {
         core.info('Initializing...');
-        const myToken = process.env.GITHUB_AUTH ||process.env.GITHUB_TOKEN;
+        const myToken = process.env.GITHUB_AUTH || process.env.GITHUB_TOKEN;
         core.info('Token acquired', myToken);
         const octokit = new Octokit({
             auth: myToken
         });
 
-        const { data: pullRequest } = await octokit.request(`GET /repos/{owner}/{repo}/pulls/{pull_number}`, {
+        const {data: pullRequest} = await octokit.request(`GET /repos/{owner}/{repo}/pulls/{pull_number}`, {
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
             pull_number: github.context.issue.number,
         });
 
-        if (!pullRequest.body){
+        if (!pullRequest.body) {
             core.info('body empty')
             return;
         }
@@ -112,7 +113,7 @@ async function evaluate() {
                 }
             }
             if (isPr) {
-                const { data: pr } = response;
+                const {data: pr} = response;
                 if (!pr) continue;
                 if (!pr.merged && !pr.closed_at) {
                     core.info('    PR is still open.');
@@ -121,7 +122,7 @@ async function evaluate() {
                     core.info('    PR has been closed.');
                 }
             } else {
-                const { data: issue } = response;
+                const {data: issue} = response;
                 if (!issue) continue;
                 if (!issue.closed_at) {
                     core.info('    Issue is still open.');

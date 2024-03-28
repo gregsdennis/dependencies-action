@@ -91,10 +91,10 @@ async function evaluate() {
             core.info(`  Fetching '${JSON.stringify(d)}'`);
             var isPr = true;
 
-            const r = await octokit.request(`/repos/${github.context.repo.owner}/${github.context.repo.repo}/pulls/${github.context.issue.number}`, {
-                owner: github.context.repo.owner,
-                repo: github.context.repo.repo,
-                pull_number: github.context.issue.number
+            const r = await octokit.request(`/repos/${d.owner}/${d.repo}/pulls/${d.pull_number}`, {
+                owner: d.owner,
+                repo: d.repo,
+                pull_number: d.pull_number
             }).catch(error => core.error(error));
             core.info('RESPONSE:', JSON.stringify(r));
             core.info('-------------------');

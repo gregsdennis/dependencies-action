@@ -23,5 +23,6 @@
   "bugs": {
     "url": "https://github.com/gregsdennis/dependencies-action/issues"
   },
-  "homepage": "https://github.com/gregsdennis/dependencies-action#readme"
+  "homepage": "https://github.com/gregsdennis/dependencies-action#readme",
+  "type": "module"
 }

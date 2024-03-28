@@ -1,7 +1,8 @@
-const core = require('@actions/core');
+import { Octokit, getInput } from "@octokit/core";
+
 const github = require('@actions/github');
 
-var customDomains = core.getInput('custom-domains')?.split(/(\s+)/) ?? [];
+var customDomains = getInput('custom-domains')?.split(/(\s+)/) ?? [];
 
 const keyPhrases = 'depends on|blocked by';
 const issueTypes = 'issues|pull';
@@ -64,11 +65,11 @@ async function evaluate() {
         core.info('Initializing...');
         const myToken = process.env.GITHUB_AUTH ||process.env.GITHUB_TOKEN;
         core.info('Token acquired', myToken);
-        const octokit = github.getOctokit(myToken, {
-            log:'debug'
+        const octokit = new Octokit({
+            auth: myToken
         });
 
-        const { data: pullRequest } = await octokit.rest.pulls.get({
+        const { data: pullRequest } = await octokit.request(`GET /repos/{owner}/{repo}/pulls/{pull_number}`, {
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
             pull_number: github.context.issue.number,
@@ -96,7 +97,7 @@ async function evaluate() {
             }).catch(error => core.error(error));
             core.info('RESPONSE:', JSON.stringify(r));
             core.info('-------------------');
-            var response = await octokit.rest.pulls.get(d).catch(error => core.error(error));
+            var response = await octokit.request(`GET /repos/{owner}/{repo}/pulls/{pull_number}`, d).catch(error => core.error(error));
             if (response === undefined) {
                 isPr = false;
                 d = {

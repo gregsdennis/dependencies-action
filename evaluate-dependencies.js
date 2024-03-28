@@ -62,7 +62,7 @@ function getAllDependencies(body) {
 async function evaluate() {
     try {
         core.info('Initializing...');
-        const myToken = process.env.GITHUB_TOKEN;
+        const myToken = process.env.GITHUB_AUTH ||process.env.GITHUB_TOKEN;
         core.info('Token acquired', myToken);
         const octokit = github.getOctokit(myToken, {
             log:'debug'

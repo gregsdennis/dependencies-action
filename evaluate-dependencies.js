@@ -85,7 +85,7 @@ async function evaluate() {
         core.debug(JSON.stringify(pullRequest.body));
         var dependencies = getAllDependencies(pullRequest.body);
         core.debug(JSON.stringify(dependencies));
-        core.info('\nAnalyzing lines y0...');
+        core.info('\nAnalyzing lines y10...');
         var dependencyIssues = [];
         for (var d of dependencies) {
             core.info(`  Fetching '${JSON.stringify(d)}'`);
@@ -95,7 +95,9 @@ async function evaluate() {
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
                 pull_number: github.context.issue.number
-            })
+            }).then((r)=> {
+                core.info('RESPONSE', JSON.stringify(r));
+            }).catch(error => core.error(error));
 
             var response = await octokit.rest.pulls.get(d).catch(error => core.error(error));
             if (response === undefined) {

@@ -64,7 +64,7 @@ async function evaluate() {
     try {
         info('Initializing...');
         const myToken = process.env.MY_TOKEN || process.env.GITHUB_TOKEN;
-        info('Token acquired', myToken);
+        info(`Token acquired: ${myToken}`);
         const octokit = new Octokit({
             auth: myToken
         });
@@ -89,29 +89,30 @@ async function evaluate() {
         for (var d of dependencies) {
             info(`  Fetching '${JSON.stringify(d)}'`);
             var isPr = true;
-
-            const r = await octokit.request(`GET /repos/{owner}/{repo}/pulls/{pull_number}`, {
+            var response = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
                 owner: d.owner,
                 repo: d.repo,
-                pull_number: d.pull_number
+                pull_number: d.pull_number,
+                headers: {
+                    "x-github-api-version": "2022-11-28",
+                },
             }).catch(e => error(e));
-            info('RESPONSE:', JSON.stringify(r));
+            info('RESPONSE2:', JSON.stringify(response));
             info('-------------------');
-            var response = await octokit.request(`GET /repos/{owner}/{repo}/pulls/{pull_number}`, d).catch(e => error(e));
-            if (response === undefined) {
-                isPr = false;
-                d = {
-                    owner: d.owner,
-                    repo: d.repo,
-                    issue_number: d.pull_number,
-                };
-                info(`  Fetching '${JSON.stringify(d)}'`);
-                response = await octokit.rest.issues.get(d).catch(error => error(error));
-                if (response === undefined) {
-                    info('    Could not locate this dependency.  Will need to verify manually.');
-                    continue;
-                }
-            }
+            // if (response === undefined) {
+            //     isPr = false;
+            //     d = {
+            //         owner: d.owner,
+            //         repo: d.repo,
+            //         issue_number: d.pull_number,
+            //     };
+            //     info(`  Fetching '${JSON.stringify(d)}'`);
+            //     response = await octokit.rest.issues.get(d).catch(error => error(error));
+            //     if (response === undefined) {
+            //         info('    Could not locate this dependency.  Will need to verify manually.');
+            //         continue;
+            //     }
+            // }
             if (isPr) {
                 const {data: pr} = response;
                 if (!pr) continue;

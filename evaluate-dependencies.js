@@ -1,6 +1,5 @@
 import { Octokit, getInput } from "@octokit/core";
-
-const github = require('@actions/github');
+import github from '@actions/github';
 
 var customDomains = getInput('custom-domains')?.split(/(\s+)/) ?? [];
 

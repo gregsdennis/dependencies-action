@@ -1,4 +1,6 @@
-const evaluate = require('./evaluate-dependencies');
+// const evaluate = require('./evaluate-dependencies');
+
+import evaluate from "./evaluate-dependencies.js";
 
 async function run() {
     await evaluate.evaluate();

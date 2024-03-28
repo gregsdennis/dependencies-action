@@ -1,4 +1,4 @@
-import {Octokit} from "@octokit/core";
+import {Octokit} from "@octokit/rest";
 import github from '@actions/github';
 import {getInput, info, error, setFailed, debug} from "@actions/core";
 
@@ -69,7 +69,7 @@ async function evaluate() {
             auth: myToken
         });
 
-        const {data: pullRequest} = await octokit.request(`GET /repos/{owner}/{repo}/pulls/{pull_number}`, {
+        const {data: pullRequest} = await octokit.rest.pulls.get({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
             pull_number: github.context.issue.number,
@@ -89,15 +89,14 @@ async function evaluate() {
         for (var d of dependencies) {
             info(`  Fetching '${JSON.stringify(d)}'`);
             var isPr = true;
-            var response = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
-                owner: d.owner,
-                repo: d.repo,
-                pull_number: d.pull_number,
-                headers: {
-                    "x-github-api-version": "2022-11-28",
-                },
-            }).catch(e => error(e));
-            info(`RESPONSE2: ${JSON.stringify(response)}`);
+
+            const { data: pullRequest } = await octokit.rest.pulls.get({
+                owner: "octokit",
+                repo: "rest.js",
+                pull_number: 123,
+            });
+
+            info(`RESPONSE2: ${JSON.stringify(data)}`);
             info('-------------------');
             // if (response === undefined) {
             //     isPr = false;

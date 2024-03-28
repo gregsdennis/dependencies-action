@@ -80,7 +80,7 @@ async function evaluate() {
         }
 
         core.info('\nReading PR body...');
-        core.debug(toJson(pullRequest.body));
+        core.debug(JSON.stringify(pullRequest.body));
         var dependencies = getAllDependencies(pullRequest.body);
         core.debug(JSON.stringify(dependencies));
         core.info('\nAnalyzing lines...');

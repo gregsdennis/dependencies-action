@@ -97,7 +97,7 @@ async function evaluate() {
                     "x-github-api-version": "2022-11-28",
                 },
             }).catch(e => error(e));
-            info('RESPONSE2:', JSON.stringify(response));
+            info(`RESPONSE2: ${JSON.stringify(response)}`);
             info('-------------------');
             // if (response === undefined) {
             //     isPr = false;

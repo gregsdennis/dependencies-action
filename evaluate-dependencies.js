@@ -83,7 +83,7 @@ async function evaluate() {
         core.debug(JSON.stringify(pullRequest.body));
         var dependencies = getAllDependencies(pullRequest.body);
         core.debug(JSON.stringify(dependencies));
-        core.info('\nAnalyzing lines...');
+        core.info('\nAnalyzing lines y0...');
         var dependencyIssues = [];
         for (var d of dependencies) {
             core.info(`  Fetching '${JSON.stringify(d)}'`);

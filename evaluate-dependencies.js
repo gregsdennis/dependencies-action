@@ -91,9 +91,9 @@ async function evaluate() {
             var isPr = true;
 
             const { data: pullRequest } = await octokit.rest.pulls.get({
-                owner: "octokit",
-                repo: "rest.js",
-                pull_number: 123,
+                owner: d.owner,
+                repo: d.repo,
+                pull_number: d.pull_number,
             });
 
             info(`RESPONSE2: ${JSON.stringify(data)}`);

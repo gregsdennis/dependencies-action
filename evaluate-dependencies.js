@@ -83,7 +83,7 @@ async function evaluate() {
 
         const { data } = await octokit.request('GET /user/repos', { type: 'private' })
 
-        ore.info(`  REPOS! '${JSON.stringify(data)}'`);
+        core.info(`  REPOS! '${JSON.stringify(data)}'`);
 
         core.info('\nReading PR body...');
         core.debug(JSON.stringify(pullRequest.body));
@@ -95,7 +95,7 @@ async function evaluate() {
             core.info(`  Fetching '${JSON.stringify(d)}'`);
             var isPr = true;
 
-            const r = await octokit.request(`/repos/${d.owner}/${d.repo}/pulls/${d.pull_number}`, {
+            const r = await octokit.request(`GET /repos/{owner}/{repo}/pulls/{pull_number}`, {
                 owner: d.owner,
                 repo: d.repo,
                 pull_number: d.pull_number

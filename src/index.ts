@@ -1,4 +1,4 @@
-import {evaluate} from "./evaluate-dependencies";
+import {evaluate} from "./EvaluateDependencies";
 
 async function run() {
     await evaluate();

@@ -9,7 +9,7 @@
   "name": "dependencies-action",
   "description": "A GitHub Action that enforces PR dependencies",
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "devDependencies": {
     "@types/node": "12.12.6",
     "@typescript-eslint/eslint-plugin": "6.14.0",
@@ -23,7 +23,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "release": "ncc build src/download-artifact.ts && git add -f dist/",
+    "release": "ncc build src/index.ts && git add -f dist/",
     "check-all": "concurrently \"npm:format-check\" \"npm:lint\" \"npm:build\"",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",

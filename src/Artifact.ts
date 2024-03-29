@@ -1,14 +1,8 @@
-import {Octokit} from "@octokit/rest";
 import {DefaultArtifactClient} from '@actions/artifact'
 import {config} from 'dotenv';
-const token = 'AAA';
+import {myToken, octokit} from "./OctoKit";
 
-const octokit = new Octokit({auth: token});
 const artifactClient = new DefaultArtifactClient()
-const params = {
-    owner: "Presight-AI",
-    repo: "vantage-backend"
-};
 
 const getEnvFile = () => {
     const myData = {};
@@ -19,14 +13,12 @@ const getEnvFile = () => {
     return myData;
 }
 
-export const getArtifactData = async () => {
+export const getArtifactData = async (params: {owner:string, repo:string}) => {
     const repoPullRequest = await octokit.rest.pulls.get({...params, pull_number: 112});
-
     const repoRuns = await octokit.actions.listWorkflowRunsForRepo({
         ...params,
         head_sha: repoPullRequest.data.head.sha
     });
-
     const repoRunArtifacts = await octokit.actions.listWorkflowRunArtifacts({
         ...params,
         run_id: repoRuns.data.workflow_runs[0].id,
@@ -40,7 +32,7 @@ export const getArtifactData = async () => {
         const aaa = await artifactClient.downloadArtifact(publishArtifact.id, {
             path: 'publish-output',
             findBy: {
-                token: token,
+                token: myToken,
                 workflowRunId: publishArtifact?.workflow_run?.id,
                 repositoryName: "vantage-backend",
                 repositoryOwner: "Presight-AI",

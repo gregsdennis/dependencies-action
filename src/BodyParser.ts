@@ -25,7 +25,7 @@ function escapeDomainForRegex(domain) {
 }
 
 function combineDomains(domains) {
-    return domains.map(x => escapeDomainForRegex(x)).join("|");
+    return domains.map((x) => escapeDomainForRegex(x)).join("|");
 }
 
 function extractFromMatch(match) {

@@ -1,17 +1,11 @@
 import github from '@actions/github';
-import {Octokit} from "@octokit/rest";
 import {info, error, setFailed} from "@actions/core";
 import {getAllDependencies} from "./BodyParser";
+import {octokit} from "./OctoKit";
+import {getArtifactData} from "./Artifact";
 
 export const evaluate = async () => {
     try {
-        info('Initializing...');
-        const myToken = process.env.MY_TOKEN || process.env.GITHUB_TOKEN;
-        info(`Token acquired: ${myToken}`);
-        const octokit = new Octokit({
-            auth: myToken
-        });
-
         const {data: pullRequest} = await octokit.rest.pulls.get({
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
@@ -40,6 +34,7 @@ export const evaluate = async () => {
             } else {
                 info('    PR has been closed.');
             }
+            getArtifactData({owner: pullRequestDependency.owner, repo: pullRequestDependency.repo});
         }
 
         if (dependencyIssues.length !== 0) {

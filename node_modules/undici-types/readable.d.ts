@@ -44,8 +44,9 @@ declare class BodyReadable extends Readable {
    */
   readonly bodyUsed: boolean
 
-  /** 
-   * If body is null, it should return null as the body
+  /** Throws on node 16.6.0
+   *
+   *  If body is null, it should return null as the body
    *
    *  If body is not null, should return the body as a ReadableStream
    *

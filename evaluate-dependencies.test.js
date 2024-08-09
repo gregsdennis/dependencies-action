@@ -68,3 +68,59 @@ test('shorthandAndPartialLinkWithBlankLineInMiddle', () => {
             pull_number: 5
         }]);
 });
+
+const multipleInDashBulletedListWithMixedLinkTypes = `- Blocked by: https://github.com/username/action_docker/pull/1
+- Blocked by: https://github.com/username/action_bump/pull/1
+- Blocked By https://github.com/username/action_python/pull/1
+- Blocked By: https://github.com/username/action_pull_requests/pull/1
+- Related: https://github.com/username/dependencies-action/issues/28
+- Related: #213 
+- Related: #214 `
+test('multipleInDashBulletedListWithMixedLinkTypes', () => {
+    expect(evaluate.getAllDependencies(multipleInDashBulletedListWithMixedLinkTypes))
+        .toStrictEqual([{
+            owner: 'username',
+            repo: 'action_docker',
+            pull_number: 1
+        },{
+            owner: 'username',
+            repo: 'action_bump',
+            pull_number: 1
+        },{
+            owner: 'username',
+            repo: 'action_python',
+            pull_number: 1
+        },{
+            owner: 'username',
+            repo: 'action_pull_requests',
+            pull_number: 1
+        }]);
+});
+
+const multipleInStarBulletedListWithMixedLinkTypes = `* Blocked by: https://github.com/username/action_docker/pull/1
+* Blocked by: https://github.com/username/action_bump/pull/1
+* Blocked By https://github.com/username/action_python/pull/1
+* Blocked By: https://github.com/username/action_pull_requests/pull/1
+* Related: https://github.com/username/dependencies-action/issues/28
+* Related: #213 
+* Related: #214 `
+test('multipleInStarBulletedListWithMixedLinkTypes', () => {
+    expect(evaluate.getAllDependencies(multipleInStarBulletedListWithMixedLinkTypes))
+        .toStrictEqual([{
+            owner: 'username',
+            repo: 'action_docker',
+            pull_number: 1
+        },{
+            owner: 'username',
+            repo: 'action_bump',
+            pull_number: 1
+        },{
+            owner: 'username',
+            repo: 'action_python',
+            pull_number: 1
+        },{
+            owner: 'username',
+            repo: 'action_pull_requests',
+            pull_number: 1
+        }]);
+});

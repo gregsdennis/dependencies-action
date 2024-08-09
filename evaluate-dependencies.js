@@ -8,11 +8,11 @@ const issueTypes = 'issues|pull';
 const domainsList = ['github.com'].concat(customDomains); // add others from parameter
 const domainsString = combineDomains(domainsList);
 
-const quickLinkRegex = new RegExp(`(${keyPhrases}) #(\\d+)`, 'gmi');
-const partialLinkRegex = new RegExp(`(${keyPhrases}) ([-_\\w]+)\\/([-._a-z0-9]+)(#)(\\d+)`, 'gmi');
-const partialUrlRegex = new RegExp(`(${keyPhrases}) ([-_\\w]+)\\/([-._a-z0-9]+)\\/(${issueTypes})\\/(\\d+)`, 'gmi');
-const fullUrlRegex = new RegExp(`(${keyPhrases}) https?:\\/\\/(?:${domainsString})\\/([-_\\w]+)\\/([-._a-z0-9]+)\\/(${issueTypes})\\/(\\d+)`, 'gmi');
-const markdownRegex = new RegExp(`(${keyPhrases}) \\[.*\\]\\(https?:\\/\\/(?:${domainsString})\\/([-_\\w]+)\\/([-._a-z0-9]+)\\/(${issueTypes})\\/(\\d+)\\)`, 'gmi');
+const quickLinkRegex = new RegExp(`(${keyPhrases}):? #(\\d+)`, 'gmi');
+const partialLinkRegex = new RegExp(`(${keyPhrases}):? ([-_\\w]+)\\/([-._a-z0-9]+)(#)(\\d+)`, 'gmi');
+const partialUrlRegex = new RegExp(`(${keyPhrases}):? ([-_\\w]+)\\/([-._a-z0-9]+)\\/(${issueTypes})\\/(\\d+)`, 'gmi');
+const fullUrlRegex = new RegExp(`(${keyPhrases}):? https?:\\/\\/(?:${domainsString})\\/([-_\\w]+)\\/([-._a-z0-9]+)\\/(${issueTypes})\\/(\\d+)`, 'gmi');
+const markdownRegex = new RegExp(`(${keyPhrases}):? \\[.*\\]\\(https?:\\/\\/(?:${domainsString})\\/([-_\\w]+)\\/([-._a-z0-9]+)\\/(${issueTypes})\\/(\\d+)\\)`, 'gmi');
 
 function escapeDomainForRegex(domain) {
     return domain.replace('.', '\\.');

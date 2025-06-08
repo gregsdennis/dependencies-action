@@ -32,6 +32,10 @@ on:
   pull_request_target: 
     types: [opened, edited, closed, reopened]
 
+permissions:
+  issues: read
+  pull-requests: read
+
 jobs:
   check_dependencies:
     runs-on: ubuntu-latest
@@ -43,3 +47,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+### Permissions and the GitHub Token
+
+This action interacts with the GitHub API, which requires the use of a token.
+
+The standard `secrets.GITHUB_TOKEN` (as shown above) can be used when accessing issues and PRs on public repositories.
+
+When your dependencies are issues or PRs found in private repositories, a [Personal Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token) (PAT) is required.  This PAT must have access to the target repositories.
